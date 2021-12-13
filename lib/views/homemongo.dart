@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/usuario.dart';
 import 'package:flutter_application_2/providers/encuesta_provider.dart';
 import 'package:flutter_application_2/providers/registro_provider.dart';
+import 'package:flutter_application_2/views/aplicarwiew.dart';
 import 'package:flutter_application_2/views/preguntasMongo.dart';
 import 'package:flutter_application_2/views/testseccion.dart';
 
@@ -103,11 +104,9 @@ update(){
                                     print(_encuestaProv.listEncuestas[index]['sections'].toString());// _ListPrueba[index].id);
                                     //Navigator.of(context).pop();
                                       Navigator.push( context, MaterialPageRoute(
-                                          builder: (context)=> PreguntasMongo(
+                                          builder: (context)=> AplicarEncuesta(  //PreguntasMongo(
                                             _encuestaProv.listEncuestas[index]['_id'].toString()
-                                            // _placeHprovider.listPlaceHolder[index].id,
-                                            // _placeHprovider.listPlaceHolder[index].title,
-                                            // _placeHprovider.listPlaceHolder[index].body
+                                            
 
                                           )
                                         ),
@@ -204,8 +203,9 @@ Widget miCard(String titulo,String description) {
             FlatButton(onPressed: () { 
                     //            PruebaProvider p = new PruebaProvider();
                     //  p.getDataMedico();
-                     }, child: Text('Aceptar')),
-            FlatButton(onPressed: () => {}, child: Text('Cancelar'))
+                    
+                     }, child: Text('Ver ')),
+            FlatButton(onPressed: () => {}, child: Text('Aplicar'))
           ],
         )
       ],

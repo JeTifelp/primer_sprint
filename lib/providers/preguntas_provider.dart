@@ -28,22 +28,27 @@ class PreguntasProvider{
         print(succes);
         List _listaux=[];
          if(succes== 'true'){      
-           _listSections=body['encuesta']['sections'];//[0]['questions'];
-          print('___________________________');
+           _listSections=body['encuesta']['sections'];//[0]['questions'];//captura de toda el Json de seccion  
+          //print('___________________________'+body['encuesta']['sections'][0]['name']);
+
            for (var i = 0; i < _listSections.length; i++) {
              //_listPreguntas= body['encuesta']['sections'][i]['questions'];
-             _listaux= body['encuesta']['sections'][i]['questions'];
-          
-           print('listaa preguntas seccion $i :'+_listPreguntas.toString());               
+             _listaux.add( body['encuesta']['sections'][i]['questions']);//saco toda la lista de preguntas de cada seccion
+             var a= body['encuesta']['sections'][i]['name'].toString();
+             var b=body['encuesta']['sections'][i]['questions']           ;
+           print('lista seccion $i -> $a :'+_listPreguntas.toString());               
+           print(' preguntas $b');
            }
 
 
+
            
-           print('lista secciones'+_listSections.toString());
+          // print('lista secciones'+_listSections.toString());
          }
          print('___________________________');
          print('cantidad de secciones '+_listSections.length.toString());
-      return _listaux;
+         print('___Pregunas seccion _  '+ _listaux.toString());
+      return _listaux;// Devuele lista de preguntas en cada seccion   L= [ [sec1],[sec2] ]
   }
 
 

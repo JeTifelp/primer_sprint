@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_2/models/usuario.dart';
@@ -22,6 +23,8 @@ class _PreguntasMongoState extends State<PreguntasMongo> {
 // final usuarioLogout= FirebaseAuth.instance.signOut();
   @override
   final _preguntaProv= new PreguntasProvider();
+
+  final List<dynamic> aux =[];
 
 
 
@@ -74,13 +77,13 @@ Widget preguntasPage() {
         child: ListView.builder(
           itemCount:_preguntaProv.listaPreguntas==null ? 0: _preguntaProv.listaPreguntas.length,
           itemBuilder: (BuildContext context, int index) {
-            return InkWell(//click en un card para navegar a otro widget
-                                  onLongPress: (){//ontap
-                                   print(_preguntaProv.listaPreguntas[index]['name'].toString());// _ListPrueba[index].id);
-                                    //Navigator.of(context).pop();
+            return Container(//click en un card para navegar a otro widget
+                                  // onLongPress: (){//ontap
+                                  //  print(_preguntaProv.listaPreguntas[index]['name'].toString());// _ListPrueba[index].id);
+                                  //   //Navigator.of(context).pop();
                                     
                                       
-                                  },
+                                  // },
 
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -103,36 +106,105 @@ Widget preguntasPage() {
                                   
                                   child:Column(
                                       children: [
-                                        
-                                        Text(
                                           
-                                        '¿'+_preguntaProv.listaPreguntas[index]['name']+'?',
+                                        Text(
+                                         //''+_preguntaProv.listaPreguntas[index][index]['name'].toString() ,
+                                         'SECCION : $index',
+                                        //'¿'+_preguntaProv.listaPreguntas[index].toString()+'?',
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
+                                          color: Colors.redAccent,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.bold
                                          ),
                                         
                                       ),
-                                      //https://www.youtube.com/watch?v=N-Jw-Nf_gZ0
-                                      for (int i=0;i<3;i++)
+                                      for (int j=0;j<_preguntaProv.listaPreguntas[index].length;j++)
+                                       
+                                       
                                       Container(
-                                        width: double.infinity,
-                                        child: MaterialButton(
-                                          shape: StadiumBorder(),
-                                          color: Colors.blue,
-                                          onPressed: (){},
-                                          child: Text('R$i',
-                                          style: TextStyle(
-                                            color: Colors.white
+                                        //height: MediaQuery.of(context).size.height,
+                                        width: MediaQuery.of(context).size.width,
+                                        //width: double.infinity,
+                                        child:Column(
+                                          children: [
+                                      
+                                          Container(
+                                            width: double.infinity,
+                                            child: Text(
+                                                //Desplegmos las Preguntas de cada seccion
+                                                  '$j.- ¿'+_preguntaProv.listaPreguntas[index][j]['name'].toString()+'?',//captura las preguntas
+                                                  //'¿'+_preguntaProv.listaPreguntas[index][j]['optionRespuesta'].toString(),
+                                                    style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold                                          
+                                                  ),
+                                                  
+                                              ),
                                           ),
-                                            
-                                          ),
+                                          
+                                        for (int i=0;i<_preguntaProv.listaPreguntas[index][j]['optionRespuesta'].length;i++)
+                                        Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          margin: EdgeInsets.all(10),
+                                          padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:  Colors.white24,
+                                               
+                                              ),
+                                              borderRadius: BorderRadius.circular(15)
+                                            ),
+                                            child:Row(
+                                              
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,                                              
+                                              children: <Widget>[
+                                                Text(
+                                                      '$i - '+_preguntaProv.listaPreguntas[index][j]['optionRespuesta'][i].toString(),
+                                                      //'R$i',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          //fontWeight: FontWeight.bold
+                                                        ),  
+                                                      
+                                                ),
+                                              
+                                                MaterialButton(
+                                                  
+                                                  shape: CircleBorder(
+                                                        side: BorderSide(
+                                                        color: Colors.black, 
+                                                        width: 1.0,style:
+                                                         BorderStyle.solid)
+                                                      ),// StadiumBorder(),
+                                                  color: Colors.deepOrange,
+                                                  hoverColor : Colors.black,
+                                                  onPressed: (){},       //C
+                                                  child: Text(''),
+                                                )
+
+                                              ],
+                                            ),
+                                             
+                                          
                                         )
-                                      )
+
+                                          ],
+
+                                        ),
+                                          
+                                        
+                                      ),
+                                      //https://www.youtube.com/watch?v=N-Jw-Nf_gZ0
+                                      
                                       
 
-
+                                      FlatButton(
+                                        color: Colors.redAccent,
+                                        onPressed: (){}, 
+                                        child: Text('Guardar')
+                                        )    
                                       ],
                                     ),
                                     
@@ -165,6 +237,23 @@ Widget preguntasPage() {
       ),
     );
   }
+Widget OptRespueta(){
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(25),
+
+    ),
+    child: Column(
+      children: [
+        Text(
+          '¿ ?',
+          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black),
+        ),
+      ],
+    ),
+  );
+}
 Widget miCard(String titulo,String description) {
   //https://andygeek.com/posts/Fundamentos%20de%20Flutter/posts/Creando-cards-en-flutter/
   return Card(
