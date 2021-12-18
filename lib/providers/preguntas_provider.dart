@@ -1,14 +1,18 @@
 //import 'package:flutter/material.dart';
+import 'package:flutter_application_2/models/seleccionadas.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:sqflite/sqlite_api.dart';
 
 class PreguntasProvider{
 
   //https://reqres.in/api/users?page=2
-
+ 
   Map data;
    List _listPreguntas=[];
    List _listSections=[];
+   List<Seleccionados> _listSeleccion=[];
 
 
   Future<List> getPreguntas(String _idencuesta)async{
@@ -37,7 +41,7 @@ class PreguntasProvider{
              var a= body['encuesta']['sections'][i]['name'].toString();
              var b=body['encuesta']['sections'][i]['questions']           ;
            print('lista seccion $i -> $a :'+_listPreguntas.toString());               
-           print(' preguntas $b');
+       //    print(' preguntas $b');
            }
 
 
@@ -54,6 +58,7 @@ class PreguntasProvider{
 
 List get listaPreguntas => _listPreguntas;
 List get listaSecciones => _listSections;
+List get listaSeleccionadas => _listSeleccion;
 
 
 setPreguntasList(List list){
@@ -63,6 +68,11 @@ setPreguntasList(List list){
 
 setSeccionesList(List list){
   _listSections=list;
+  
+}
+
+setSeleccionadasList( Seleccionados sel ){
+  _listPreguntas.add(sel);
   
 }
 

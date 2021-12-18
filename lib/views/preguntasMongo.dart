@@ -160,7 +160,7 @@ Widget preguntasPage() {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,                                              
                                               children: <Widget>[
                                                 Text(
-                                                      '$i - '+_preguntaProv.listaPreguntas[index][j]['optionRespuesta'][i].toString(),
+                                                      '$i - '+_preguntaProv.listaPreguntas[index][j]['optionRespuesta'][i]['value'].toString(),
                                                       //'R$i',
                                                         style: TextStyle(
                                                           color: Colors.white,

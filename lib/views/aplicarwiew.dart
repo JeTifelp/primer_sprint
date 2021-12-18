@@ -1,8 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/providers/preguntas_provider.dart';
 
 class AplicarEncuesta extends StatefulWidget {
-  final String _idencuesta;
+  String _idencuesta;
 
   AplicarEncuesta(this._idencuesta, {Key key}) : super(key: key);
 
@@ -14,13 +16,19 @@ class _AplicarEncuestaState extends State<AplicarEncuesta> {
   @override
   final _preguntaProv = new PreguntasProvider();
 
-  final List<dynamic> aux = [];
+   String _idEncuesta='';
+
+  final List<dynamic> _listSeleccion = [];
+  bool _checkBoxValue = false;
+  int _valueRadio = 0;
+  String _cad = '';
 
   @override
   void initState() {
     super.initState();
     var aux = widget._idencuesta.replaceAll('[', '');
     var url = aux.replaceAll(']', '');
+    _idEncuesta = url;
 
     _preguntaProv.getPreguntas(url).then((value) {
       setState(() {
@@ -30,6 +38,7 @@ class _AplicarEncuestaState extends State<AplicarEncuesta> {
   }
 
   Widget build(BuildContext context) {
+    int count = 0;
     return Scaffold(
       appBar: AppBar(
         title: Text("Aplicar Encuesta"),
@@ -47,9 +56,12 @@ class _AplicarEncuestaState extends State<AplicarEncuesta> {
             height: double.infinity,
             child: Center(
                 child: PageView.builder(
-              itemCount:
-                  3, //_preguntaProv.listaPreguntas==null ? 0: _preguntaProv.listaPreguntas.length,
+              itemCount: _preguntaProv.listaPreguntas == null
+                  ? 0
+                  : _preguntaProv.listaPreguntas.length,
               itemBuilder: (BuildContext context, index) {
+                count = index + 1;
+
                 return Container(
                   color: Color(0xFF272A3C),
                   width: double.infinity,
@@ -89,94 +101,191 @@ class _AplicarEncuestaState extends State<AplicarEncuesta> {
 
                     child: Column(
                       children: [
-                        Text(
-                          'SECCION : $index' + '/2',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold, //w200,
-                            fontStyle: FontStyle.italic,
+                        // Pegar aqui codigo comleto
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: 100,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                child: Column(
+                                  children: [
+                                    //==========================================
+
+                                    Text(
+                                      'SECCION : $count' +
+                                          '/' +
+                                          _preguntaProv.listaPreguntas.length
+                                              .toString(),
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold, //w200,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+
+                                    for (int j = 0;
+                                        j <
+                                            _preguntaProv
+                                                .listaPreguntas[index].length;
+                                        j++)
+                                      //for (int j = 0; j < 2; j++)
+                                      Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.all(0.1),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              //'$j.- ¿ Pregunta ' + '?',
+                                              '$j.- ¿' +
+                                                  _preguntaProv
+                                                      .listaPreguntas[index][j]
+                                                          ['name']
+                                                      .toString() +
+                                                  '?', //captura las preguntas
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold),
+                                            ), //captura las preguntas'),
+                                            //if index == 0 ? Container(): Container(),  [j]['multiple']
+                                            new Center(
+                                                //child:_preguntaProv.listaPreguntas[index][j]['tipoPregunta']['type'].toString() == '2' ?
+                                                child: _preguntaProv
+                                                            .listaPreguntas[
+                                                                index][j]
+                                                                ['multiple']
+                                                            .toString() ==
+                                                        'true'
+                                                    ? //si true= selecccion multiple, false=seleccion unica
+                                                    new Container(
+                                                        // respuestas de seleccion multiple
+                                                        child: Column(
+                                                          children: [
+                                                            for (int i = 0;
+                                                                i <
+                                                                    _preguntaProv
+                                                                        .listaPreguntas[
+                                                                            index]
+                                                                            [j]
+                                                                            ['optionRespuesta']
+                                                                        .length;
+                                                                i++)
+                                                              Container(
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Text(
+                                                                      '$i - ' +
+                                                                          _preguntaProv
+                                                                              .listaPreguntas[index]
+                                                                              [j]
+                                                                              ['optionRespuesta']
+                                                                              [i]['value']
+                                                                              .toString(),
+                                                                      
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            15,
+                                                                        //fontWeight: FontWeight.bold
+                                                                        fontStyle:
+                                                                            FontStyle.italic,
+                                                                      ),
+                                                                    ),
+                                                                    Checkbox(
+                                                                        value:
+                                                                            _checkBoxValue,
+                                                                        onChanged:
+                                                                            (bool value) {
+                                                                          print(value);
+
+                                                                          setState(
+                                                                              () {
+                                                                            _checkBoxValue =!_checkBoxValue;
+                                                                          });
+
+                                                                          // _checkBoxValue = false;
+                                                                        })
+                                                                  ],
+                                                                ),
+                                                              )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : new Container(
+                                                        // respuestas de seleccion simple
+
+                                                        child: Column(
+                                                          children: [
+                                                            for (int i = 0;
+                                                                i <
+                                                                    _preguntaProv
+                                                                        .listaPreguntas[
+                                                                            index]
+                                                                            [j][
+                                                                            'optionRespuesta']
+                                                                        .length;
+                                                                i++)
+                                                              Container(
+                                                                  child:
+                                                                      ListTile(
+                                                                title: Text(_preguntaProv
+                                                                    .listaPreguntas[
+                                                                        index]
+                                                                        [j][
+                                                                        'optionRespuesta']
+                                                                        [i][
+                                                                        'value']
+                                                                    .toString()),
+                                                                leading: Radio(
+                                                                  value: i,
+                                                                  groupValue:
+                                                                      _valueRadio,
+                                                                  onChanged: (int
+                                                                      value) {
+                                                                    print(
+                                                                        value);
+                                                                    print(_preguntaProv.listaPreguntas[index][j]
+                                                                            [
+                                                                            'optionRespuesta'][i]
+                                                                        [
+                                                                        '_id']);
+                                                                        print('id encuesta'+_idEncuesta);
+                                                                    setState(
+                                                                        () {
+                                                                      _valueRadio =
+                                                                          value;
+                                                                    });
+                                                                  },
+                                                                ),
+                                                                onTap: () {
+                                                                  setState(
+                                                                      () {});
+                                                                },
+                                                              ))
+                                                          ],
+                                                        ),
+                                                      )),
+                                          ],
+                                        ),
+                                      )
+
+                                    //==========================================
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
-                        //for (int j=0;j<_preguntaProv.listaPreguntas[index].length;j++)
-                        for (int j = 0; j < 2; j++)
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(0.1),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '$j.- ¿ Pregunta ' + '?',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ), //captura las preguntas'),
-                                //if index == 0 ? Container(): Container(),
-
-                                //for (int i=0;i<_preguntaProv.listaPreguntas[index][j]['optionRespuesta'].length;i++)
-                                for (int i = 0; i < 3; i++)
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          // '$i - '+_preguntaProv.listaPreguntas[index][j]['optionRespuesta'][i].toString(),
-                                          '$i   respuestas',
-                                          //'R$i',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            //fontWeight: FontWeight.bold
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                        MaterialButton(
-                                          height: 7,
-                                          minWidth: 7,
-                                          shape: CircleBorder(
-                                              side: BorderSide(
-                                                  color: Colors.black,
-                                                  width: 1,
-                                                  style: BorderStyle
-                                                      .solid)), // StadiumBorder(),
-                                          color: Colors.white,
-                                          splashColor: Colors.lightBlueAccent,
-
-                                          //  hoverColor : Colors.black,
-                                          onPressed: () {}, //C
-                                          child: Text(''),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              ],
-                            ),
-                          )
                       ],
                     ),
                   ),
-
-                  // child: Container(
-                  //   width: 210,
-                  //   height: 90,
-                  //   decoration: BoxDecoration(
-                  //     color: Color(0xFF94CCF9), //light blue
-                  //     borderRadius: BorderRadius.only(
-                  //       topLeft: Radius.circular(45),
-                  //       bottomLeft: Radius.circular(45),
-                  //     ),
-                  //   ),
-                  //   alignment: Alignment.center,
-                  //   child: Text(
-                  //     'Challenge',
-                  //     style: TextStyle(
-                  //       fontSize: 32,
-                  //       color: Colors.white,
-                  //     ),
-                  //   ),
-                  // ),
                 );
               },
             )

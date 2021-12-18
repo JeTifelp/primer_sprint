@@ -1,13 +1,15 @@
 
 import 'package:flutter_application_2/models/encuesta.dart';
+import 'package:flutter_application_2/providers/db_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
 class EncuestaProvider {
 Map data;
-   List _lisEncuestas=[];
 
+   List _lisEncuestas=[];
+ int cont= 0 ;
 
   Future<List> getEncuesta()async{
   //final _url = 'https://encuestas-rest-api-server2.herokuapp.com/api/v1/encuestas';//  url Poste
@@ -26,7 +28,7 @@ Map data;
         print(suc);
         List _listaux=[];
         if(suc== 'true'){
-          print('Seccion  ______data: ${ body['encuestas'][1]['sections'] } ');  
+          print('Seccion  ______data: ${ body['encuestas'][0]['sections'] } ');  //muestra id de secciones de encueta 0
           _listaux=body['encuestas'];
           print(_lisEncuestas.toString());
         }
@@ -34,6 +36,47 @@ Map data;
    return _listaux;
   }
 
+Future<List> readInSqlite()async{
+  //final _url = 'https://encuestas-rest-api-server2.herokuapp.com/api/v1/encuestas';//  url Poste
+    
+     final _url = 'https://encuestas-server-rest-api.herokuapp.com/api/v1/encuestas';//final _url= 'https://reqres.in/api/users?page=2' ;
+   
+        final resp = await http.get(Uri.parse(_url)).timeout(Duration(seconds: 90));
+        
+        final Map<String, dynamic> body=jsonDecode(resp.body);//extraer body devuelve dynamic     result es un mapa
+     
+        String suc= body['success'].toString();
+        print(suc);
+        List _listaux=[];
+        if(suc== 'true'){
+          //print('Seccion  ______data: ${ body['encuestas'][1]['sections'] } ');  
+
+          
+          _listaux=body['encuestas'];
+          print(_lisEncuestas.toString());
+          
+          // sacar cada encuesta
+          // print('Seccion  ______data 0: ${ body['encuestas'][0] } ');  
+          // print('Seccion  ______data 1: ${ body['encuestas'][1] } '); 
+          
+          for (var item in body['encuestas']) {
+            final newEncuesta = EncuestaModelQlite(  encuesta : item, estado: 'ING');
+            //final newEncuesta = EncuestaModelQlite(  encuesta : item.toString(), estado: 'ING');
+            
+            DBProvider.db.nuevaEncuesta(newEncuesta);
+            print('******__** encuestaaaa # : '+ item.toString());
+            print('******________Sqlite # : '+ newEncuesta.encuesta.toString());
+            
+            
+          }
+
+
+
+
+        }
+        print('logitud lista'+_listaux.length.toString());
+   return _listaux;
+  }
 
 List get listEncuestas => _lisEncuestas;
 setPEncuestasList(List list){
